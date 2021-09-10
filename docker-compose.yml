@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  box:
+    image: busybox
+    volumes:
+      - /box_gem
+  app:
+    build: .
+    command: bash -c "echo > tmp/pids/server.pid || bundle check || bundle install && bundle exec rails s -p 4001 -b '0.0.0.0'"
+    volumes:
+      - .:/var/ecommerce
+      - type: volume
+        source: box_gem
+        target: /box_gem
+        volume:
+          nocopy: true
+    ports:
+      - '4001:4001'
+volumes:
+  box_gem:
+
